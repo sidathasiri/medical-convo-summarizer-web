@@ -55,6 +55,14 @@ Resources:
     Properties:
       Domain: !Sub ${AWS::StackName}-${AWS::Region}-domain
       UserPoolId: !Ref UserPool
+      ManagedLoginVersion: 2
+
+  ManagedLoginBranding:
+    Type: AWS::Cognito::ManagedLoginBranding
+    Properties:
+      UserPoolId: !Ref UserPool
+      ClientId: !Ref UserPoolClient
+      UseCognitoProvidedValues: true
 
 Outputs:
   UserPoolId:

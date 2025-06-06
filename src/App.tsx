@@ -6,7 +6,7 @@ function App() {
   const auth = useAuth();
 
   const signOutRedirect = () => {
-    const clientId = "4is934eur0to1b97h1lf7n8h3u";
+    const clientId = "1ick1556cmfh4rmciphp5diq1h";
     const logoutUri = "http://localhost:3000";
     const cognitoDomain =
       "https://medical-convo-summarizer-web-us-east-1-domain.auth.us-east-1.amazoncognito.com";
