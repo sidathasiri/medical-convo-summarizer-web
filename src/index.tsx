@@ -1,15 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { AuthProvider } from "react-oidc-context";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { WebStorageStateStore } from "oidc-client-ts";
+
+const cognitoAuthConfig = {
+  authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_dd3asB2jz",
+  client_id: "4is934eur0to1b97h1lf7n8h3u",
+  redirect_uri: "http://localhost:3000",
+  response_type: "code",
+  redirectMethod: "replace",
+  scopes: ["openid", "profile", "email"],
+  onSigninCallback: (_user: any) => {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  },
+  userStore: new WebStorageStateStore({ store: window.localStorage }),
+};
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider {...cognitoAuthConfig}>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
 
