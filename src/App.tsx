@@ -11,6 +11,7 @@ function App() {
   const auth = useAuth();
 
   const signOutRedirect = () => {
+    auth.removeUser();
     window.location.href = `${COGNITO_DOMAIN}/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(
       COGNITO_LOGOUT_URI
     )}`;
@@ -25,17 +26,10 @@ function App() {
   }
 
   if (auth.isAuthenticated && auth.user) {
-    return (
-      <AuthenticatedView user={auth.user} onSignOut={() => auth.removeUser()} />
-    );
+    return <AuthenticatedView user={auth.user} onSignOut={signOutRedirect} />;
   }
 
-  return (
-    <UnauthenticatedView
-      onSignIn={() => auth.signinRedirect()}
-      onSignOut={signOutRedirect}
-    />
-  );
+  return <UnauthenticatedView onSignIn={() => auth.signinRedirect()} />;
 }
 
 export default App;
