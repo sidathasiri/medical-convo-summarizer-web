@@ -11,10 +11,11 @@ function App() {
   const auth = useAuth();
 
   const signOutRedirect = () => {
-    auth.removeUser();
-    window.location.href = `${COGNITO_DOMAIN}/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(
-      COGNITO_LOGOUT_URI
-    )}`;
+    auth.removeUser().then(() => {
+      window.location.href = `${COGNITO_DOMAIN}/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(
+        COGNITO_LOGOUT_URI
+      )}`;
+    });
   };
 
   if (auth.isLoading) {
