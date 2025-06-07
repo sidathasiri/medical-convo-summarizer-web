@@ -1,4 +1,5 @@
 import { styles } from "../HomePage.styles";
+import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 
 interface HeaderProps {
   email: string;
@@ -11,12 +12,24 @@ export const Header = ({ email, onSignOut }: HeaderProps) => {
       <div style={styles.headerContent}>
         <div style={styles.logo}>MediScribe</div>
         <div style={styles.userInfo}>
-          <span>{email}</span>
+          <span
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+          >
+            <FaUserCircle />
+            {email}
+          </span>
           <button
             onClick={onSignOut}
-            style={{ ...styles.button, ...styles.dangerButton }}
+            style={{
+              ...styles.button,
+              ...styles.dangerButton,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
           >
-            Sign out
+            <FaSignOutAlt />
+            <span>Sign out</span>
           </button>
         </div>
       </div>

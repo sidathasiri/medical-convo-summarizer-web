@@ -1,4 +1,11 @@
 import { styles } from "../HomePage.styles";
+import {
+  FaMicrophone,
+  FaStop,
+  FaTrash,
+  FaMagic,
+  FaClock,
+} from "react-icons/fa";
 
 interface RecordingSectionProps {
   isRecording: boolean;
@@ -24,7 +31,14 @@ export const RecordingSection = ({
         <div style={styles.recordingStatus}>
           <div style={styles.statusIndicator(isRecording)} />
           <span>{isRecording ? "Recording" : "Ready"}</span>
-          {isRecording && <span>{duration}</span>}
+          {isRecording && (
+            <span
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <FaClock style={{ verticalAlign: "middle" }} />
+              {duration}
+            </span>
+          )}
         </div>
       </div>
 
@@ -34,9 +48,22 @@ export const RecordingSection = ({
           style={{
             ...styles.button,
             ...styles.primaryButton,
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
           }}
         >
-          {isRecording ? "Stop Recording" : "Start Recording"}
+          {isRecording ? (
+            <>
+              <FaStop style={{ verticalAlign: "middle" }} />
+              <span>Stop Recording</span>
+            </>
+          ) : (
+            <>
+              <FaMicrophone style={{ verticalAlign: "middle" }} />
+              <span>Start Recording</span>
+            </>
+          )}
         </button>
 
         {transcription && !isRecording && (
@@ -46,18 +73,26 @@ export const RecordingSection = ({
               style={{
                 ...styles.button,
                 ...styles.dangerButton,
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
               }}
             >
-              Clear & Start Over
+              <FaTrash style={{ verticalAlign: "middle" }} />
+              <span>Clear & Start Over</span>
             </button>
             <button
               onClick={onGenerateSummary}
               style={{
                 ...styles.button,
                 ...styles.primaryButton,
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
               }}
             >
-              Generate Summary
+              <FaMagic style={{ verticalAlign: "middle" }} />
+              <span>Generate Summary</span>
             </button>
           </>
         )}

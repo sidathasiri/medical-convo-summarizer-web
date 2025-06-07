@@ -1,4 +1,5 @@
 import { styles } from "../LandingPage.styles";
+import { FaClipboardList, FaPills, FaCalendarCheck } from "react-icons/fa";
 
 export const FeaturesSection = () => {
   return (
@@ -6,14 +7,17 @@ export const FeaturesSection = () => {
       <h2 style={styles.sectionTitle}>Why Parents Choose MediScribe</h2>
       <div style={styles.featuresGrid}>
         <FeatureCard
+          icon={<FaClipboardList size={24} />}
           title="Clear Summaries"
           description="Get easy-to-understand summaries of medical consultations, organized by topic and importance."
         />
         <FeatureCard
+          icon={<FaPills size={24} />}
           title="Medication Details"
           description="Never forget medication instructions. Get dosage, timing, and important warnings clearly laid out."
         />
         <FeatureCard
+          icon={<FaCalendarCheck size={24} />}
           title="Follow-up Actions"
           description="Keep track of follow-up appointments, tests, and warning signs to watch for."
         />
@@ -23,13 +27,15 @@ export const FeaturesSection = () => {
 };
 
 interface FeatureCardProps {
+  icon: React.ReactNode;
   title: string;
   description: string;
 }
 
-const FeatureCard = ({ title, description }: FeatureCardProps) => {
+const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
   return (
     <div style={styles.feature}>
+      <div style={{ marginBottom: "1rem", color: "#4C51BF" }}>{icon}</div>
       <div style={styles.featureTitle}>{title}</div>
       <p style={styles.featureDescription}>{description}</p>
     </div>

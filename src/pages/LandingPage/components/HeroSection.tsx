@@ -1,4 +1,5 @@
 import { styles } from "../LandingPage.styles";
+import { FaRocket } from "react-icons/fa";
 
 interface HeroSectionProps {
   onSignIn: () => void;
@@ -16,9 +17,21 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
           organized medical notes, medication details, and follow-up steps — all
           powered by AI.
         </p>
-        <button style={styles.button} onClick={onSignIn}>
-          Try MediScribe Free
-        </button>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            style={{
+              ...styles.button,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "1.25rem 3rem",
+            }}
+            onClick={onSignIn}
+          >
+            <FaRocket />
+            <span>Try MediScribe Free</span>
+          </button>
+        </div>
       </div>
     </section>
   );
