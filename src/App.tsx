@@ -1,12 +1,8 @@
-// App.js
-
 import { useAuth } from "react-oidc-context";
-import { createTranscribeClient } from "./services/transcribe-client";
-import { useCallback, useState } from "react";
-import {
-  StartStreamTranscriptionCommand,
-  AudioStream,
-} from "@aws-sdk/client-transcribe-streaming";
+import { TranscriptionClient } from "./services/transcribe-client";
+import { useCallback, useState, useRef } from "react";
+import { StartStreamTranscriptionCommand } from "@aws-sdk/client-transcribe-streaming";
+import { AudioCaptureService } from "./services/audio-capture-service";
 import {
   COGNITO_CLIENT_ID,
   COGNITO_DOMAIN,
@@ -16,27 +12,47 @@ import {
 function App() {
   const auth = useAuth();
   const [transcription, setTranscription] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const audioCaptureRef = useRef<AudioCaptureService | undefined>(undefined);
+  const transcribeStreamRef = useRef<AbortController | undefined>(undefined);
+
+  const stopRecording = useCallback(() => {
+    if (transcribeStreamRef.current) {
+      transcribeStreamRef.current.abort();
+      transcribeStreamRef.current = undefined;
+    }
+    if (audioCaptureRef.current) {
+      audioCaptureRef.current.stop();
+      audioCaptureRef.current = undefined;
+    }
+    setIsRecording(false);
+  }, []);
 
   const startTranscription = useCallback(async () => {
+    if (isRecording) {
+      stopRecording();
+      return;
+    }
+
     if (!auth.user?.id_token) {
       console.error("No access token available");
       return;
     }
 
     try {
-      const transcribeClient = await createTranscribeClient(auth.user.id_token);
+      setIsRecording(true);
+      const transcribeClient = await TranscriptionClient.create(
+        auth.user.id_token
+      );
 
-      // Create an audio stream (this is just a placeholder - you'll need to implement actual audio streaming)
-      const audioStream = async function* () {
-        // This is where you would put your actual audio streaming logic
-        yield { AudioEvent: { AudioChunk: new Uint8Array(0) } };
-      };
+      audioCaptureRef.current = new AudioCaptureService();
+      transcribeStreamRef.current = new AbortController();
 
       const command = new StartStreamTranscriptionCommand({
         LanguageCode: "en-US",
         MediaEncoding: "pcm",
         MediaSampleRateHertz: 16000,
-        AudioStream: audioStream(),
+        AudioStream: audioCaptureRef.current.createAudioStream(),
       });
 
       const response = await transcribeClient.send(command);
@@ -57,8 +73,10 @@ function App() {
       }
     } catch (error) {
       console.error("Error in transcription:", error);
+    } finally {
+      stopRecording();
     }
-  }, [auth.user?.id_token]);
+  }, [auth.user?.id_token, isRecording, stopRecording]);
 
   const signOutRedirect = () => {
     window.location.href = `${COGNITO_DOMAIN}/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(
@@ -78,7 +96,9 @@ function App() {
     return (
       <div>
         <pre>Hello: {auth.user?.profile.email}</pre>
-        <button onClick={startTranscription}>Start Transcription</button>
+        <button onClick={startTranscription}>
+          {isRecording ? "Stop Recording" : "Start Recording"}
+        </button>
         {transcription && (
           <div>
             <h3>Transcription:</h3>
