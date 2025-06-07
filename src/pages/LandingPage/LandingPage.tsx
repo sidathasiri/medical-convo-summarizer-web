@@ -1,5 +1,5 @@
 import React from "react";
-import { styles } from "./LandingPage/LandingPage.styles";
+import { styles } from "./LandingPage.styles";
 
 interface LandingPageProps {
   onSignIn: () => void;

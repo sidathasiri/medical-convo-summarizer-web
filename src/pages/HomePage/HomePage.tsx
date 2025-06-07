@@ -1,15 +1,15 @@
 import { User } from "oidc-client-ts";
-import { useTranscription } from "../hooks/useTranscription";
+import { useTranscription } from "../../hooks/useTranscription";
 
-interface AuthenticatedViewProps {
+interface HomePageProps {
   user: User;
   onSignOut: () => void;
 }
 
-export const AuthenticatedView = ({
+export const HomePage = ({
   user,
   onSignOut,
-}: AuthenticatedViewProps) => {
+}: HomePageProps) => {
   const { transcription, isRecording, startTranscription } = useTranscription(
     user.id_token
   );

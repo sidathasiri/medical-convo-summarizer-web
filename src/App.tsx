@@ -4,8 +4,8 @@ import {
   COGNITO_DOMAIN,
   COGNITO_LOGOUT_URI,
 } from "./configs";
-import { AuthenticatedView } from "./components/AuthenticatedView";
-import LandingPage from "./pages/LandingPage";
+import { HomePage } from "./pages/HomePage/HomePage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 function App() {
   const auth = useAuth();
@@ -26,7 +26,7 @@ function App() {
   }
 
   if (auth.isAuthenticated && auth.user) {
-    return <AuthenticatedView user={auth.user} onSignOut={signOutRedirect} />;
+    return <HomePage user={auth.user} onSignOut={signOutRedirect} />;
   }
 
   return <LandingPage onSignIn={() => auth.signinRedirect()} />;
