@@ -5,11 +5,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { WebStorageStateStore } from "oidc-client-ts";
+import {
+  COGNITO_CLIENT_ID,
+  COGNITO_POOL_ID,
+  COGNITO_REDIRECT_URI,
+} from "./configs";
 
 const cognitoAuthConfig = {
-  authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_SiFC5wK0S",
-  client_id: "1ick1556cmfh4rmciphp5diq1h",
-  redirect_uri: "http://localhost:3000",
+  authority: `https://cognito-idp.us-east-1.amazonaws.com/${COGNITO_POOL_ID}`,
+  client_id: COGNITO_CLIENT_ID,
+  redirect_uri: COGNITO_REDIRECT_URI,
   response_type: "code",
   redirectMethod: "replace",
   scopes: ["openid", "profile", "email"],
