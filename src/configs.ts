@@ -7,3 +7,5 @@ export const COGNITO_DOMAIN =
   "https://medical-convo-summarizer-web-us-east-1-domain.auth.us-east-1.amazoncognito.com";
 export const COGNITO_REDIRECT_URI = "http://localhost:3000";
 export const COGNITO_LOGOUT_URI = "http://localhost:3000";
+export const BACKEND_API_URL =
+  "https://wkec1r4fkh.execute-api.us-east-1.amazonaws.com/prod";

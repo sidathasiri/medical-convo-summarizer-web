@@ -2,6 +2,7 @@ import { User } from "oidc-client-ts";
 import { useTranscription } from "../../hooks/useTranscription";
 import { styles } from "./HomePage.styles";
 import { useState, useEffect } from "react";
+import { BACKEND_API_URL } from "../../configs";
 import { Header } from "./components/Header";
 import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
@@ -65,22 +66,32 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   };
 
   const handleGenerateSummary = async () => {
-    setGeneratedSummary("Generating summary...");
-    setTimeout(() => {
-      setGeneratedSummary(`
-        Summary of the consultation:
-        
-        Key Points:
-        - Discussion about the patient's symptoms
-        - Medication prescribed and dosage instructions
-        - Follow-up appointment scheduled
-        
-        Next Steps:
-        1. Start prescribed medication
-        2. Monitor symptoms
-        3. Return for follow-up in 2 weeks
-      `);
-    }, 2000);
+    try {
+      setGeneratedSummary("Generating summary...");
+
+      const response = await fetch(`${BACKEND_API_URL}/transcription/summary`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.id_token}`,
+        },
+        body: JSON.stringify({
+          transcription: transcription,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate summary");
+      }
+
+      const data = await response.json();
+      console.log("response:", data);
+
+      setGeneratedSummary(data.transcription);
+    } catch (error) {
+      console.error("Error generating summary:", error);
+      setGeneratedSummary("Failed to generate summary. Please try again.");
+    }
   };
 
   return (
