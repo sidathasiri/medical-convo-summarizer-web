@@ -5,6 +5,8 @@ interface RecordingSectionProps {
   duration: string;
   transcription: string;
   onRecordingToggle: () => void;
+  onClearTranscription: () => void;
+  onGenerateSummary: () => void;
 }
 
 export const RecordingSection = ({
@@ -12,6 +14,8 @@ export const RecordingSection = ({
   duration,
   transcription,
   onRecordingToggle,
+  onClearTranscription,
+  onGenerateSummary,
 }: RecordingSectionProps) => {
   return (
     <section style={styles.recordingSection}>
@@ -24,16 +28,40 @@ export const RecordingSection = ({
         </div>
       </div>
 
-      <button
-        onClick={onRecordingToggle}
-        style={{
-          ...styles.button,
-          ...styles.primaryButton,
-          marginBottom: "1rem",
-        }}
-      >
-        {isRecording ? "Stop Recording" : "Start Recording"}
-      </button>
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+        <button
+          onClick={onRecordingToggle}
+          style={{
+            ...styles.button,
+            ...styles.primaryButton,
+          }}
+        >
+          {isRecording ? "Stop Recording" : "Start Recording"}
+        </button>
+
+        {transcription && !isRecording && (
+          <>
+            <button
+              onClick={onClearTranscription}
+              style={{
+                ...styles.button,
+                ...styles.dangerButton,
+              }}
+            >
+              Clear & Start Over
+            </button>
+            <button
+              onClick={onGenerateSummary}
+              style={{
+                ...styles.button,
+                ...styles.primaryButton,
+              }}
+            >
+              Generate Summary
+            </button>
+          </>
+        )}
+      </div>
 
       {transcription && (
         <div style={styles.transcriptionContent}>

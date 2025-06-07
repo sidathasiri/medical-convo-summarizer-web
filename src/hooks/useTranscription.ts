@@ -21,6 +21,11 @@ export const useTranscription = (idToken: string | undefined) => {
     setIsRecording(false);
   }, []);
 
+  const clearTranscription = useCallback(() => {
+    stopRecording(); // Make sure recording is stopped when clearing
+    setTranscription("");
+  }, [stopRecording]);
+
   const startTranscription = useCallback(async () => {
     if (isRecording) {
       stopRecording();
@@ -72,5 +77,6 @@ export const useTranscription = (idToken: string | undefined) => {
     transcription,
     isRecording,
     startTranscription,
+    clearTranscription,
   };
 };

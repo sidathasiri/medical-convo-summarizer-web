@@ -14,7 +14,7 @@ export const Header = ({ email, onSignOut }: HeaderProps) => {
           <span>{email}</span>
           <button
             onClick={onSignOut}
-            style={{ ...styles.button, ...styles.secondaryButton }}
+            style={{ ...styles.button, ...styles.dangerButton }}
           >
             Sign out
           </button>
