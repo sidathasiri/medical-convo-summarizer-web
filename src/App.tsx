@@ -1,7 +1,7 @@
 // App.js
 
 import { useAuth } from "react-oidc-context";
-import { createTranscribeClient } from "./utils/transcribe-client";
+import { createTranscribeClient } from "./services/transcribe-client";
 import { useCallback, useState } from "react";
 import {
   StartStreamTranscriptionCommand,
