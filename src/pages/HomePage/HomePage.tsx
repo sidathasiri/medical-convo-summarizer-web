@@ -7,6 +7,7 @@ import { Header } from "./components/Header";
 import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
 import { InfoSection } from "./components/InfoSection";
+import { SummaryDisplay } from "./components/SummaryDisplay";
 
 interface HomePageProps {
   user: User;
@@ -109,14 +110,7 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
           onClearTranscription={handleClearTranscription}
           onGenerateSummary={handleGenerateSummary}
         />
-        {generatedSummary && (
-          <section style={styles.recordingSection}>
-            <h3 style={styles.recordingTitle}>Generated Summary</h3>
-            <div style={styles.transcriptionContent}>
-              <pre style={styles.transcriptionText}>{generatedSummary}</pre>
-            </div>
-          </section>
-        )}
+        {generatedSummary && <SummaryDisplay summary={generatedSummary} />}
         <InfoSection />
       </main>
     </div>
