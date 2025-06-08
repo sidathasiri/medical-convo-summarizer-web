@@ -8,4 +8,5 @@ export const COGNITO_DOMAIN =
 export const COGNITO_REDIRECT_URI = "http://localhost:3000";
 export const COGNITO_LOGOUT_URI = "http://localhost:3000";
 export const BACKEND_API_URL =
-  "https://wkec1r4fkh.execute-api.us-east-1.amazonaws.com/prod";
+  "https://nmtqt5hrgrfw7aobf3v2sz5kxy.appsync-api.us-east-1.amazonaws.com";
+export const API_KEY = process.env.REACT_APP_APPSYNC_API_KEY ?? ""; // Replace with your actual API key

@@ -2,7 +2,7 @@ import { User } from "oidc-client-ts";
 import { useTranscription } from "../../hooks/useTranscription";
 import { styles } from "./HomePage.styles";
 import { useState, useEffect } from "react";
-import { BACKEND_API_URL } from "../../configs";
+import { BACKEND_API_URL, API_KEY } from "../../configs";
 import { Header } from "./components/Header";
 import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
@@ -83,23 +83,43 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
     try {
       setGeneratedSummary("Generating summary...");
 
-      const response = await fetch(`${BACKEND_API_URL}/transcription/summary`, {
+      const query = `
+        query GetTranscriptionSummary($transcription: String!) {
+          getTranscriptionSummary(transcription: $transcription) {
+            success
+            error
+            summary
+          }
+        }
+      `;
+
+      const response = await fetch(`${BACKEND_API_URL}/graphql`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id_token}`,
+          "x-api-key": API_KEY,
         },
         body: JSON.stringify({
-          transcription: transcription,
+          query,
+          variables: {
+            transcription: transcription,
+          },
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate summary");
+      const { data, errors } = await response.json();
+
+      if (errors) {
+        throw new Error(errors[0].message || "Failed to generate summary");
       }
 
-      const data = await response.json();
-      setGeneratedSummary(data.transcription);
+      if (!data.getTranscriptionSummary.success) {
+        throw new Error(
+          data.getTranscriptionSummary.error || "Failed to generate summary"
+        );
+      }
+
+      setGeneratedSummary(data.getTranscriptionSummary.summary);
     } catch (error) {
       console.error("Error generating summary:", error);
       setGeneratedSummary("Failed to generate summary. Please try again.");
