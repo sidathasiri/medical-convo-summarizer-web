@@ -13,10 +13,20 @@ export const FileUploadSection = ({
 }: FileUploadSectionProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
-      onFileUpload(file);
+      try {
+        await onFileUpload(file);
+        // Reset the file input after successful upload
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      } catch (error) {
+        console.error("File upload failed:", error);
+      }
     }
   };
 

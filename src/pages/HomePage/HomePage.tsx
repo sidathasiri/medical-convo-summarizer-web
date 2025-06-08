@@ -125,10 +125,12 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
         setGeneratedSummary(
           `File "${file.name}" uploaded successfully. Transcription will be implemented soon.`
         );
+        return fileKey; // Return the fileKey to indicate success
       }
     } catch (error) {
       console.error("Error uploading file:", error);
       setGeneratedSummary("Failed to upload file. Please try again.");
+      throw error; // Re-throw to be caught by the FileUploadSection
     }
   };
 
