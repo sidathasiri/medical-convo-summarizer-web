@@ -15,7 +15,12 @@ export class FileUploadService {
       credentials: credentials,
     });
 
-    const fileKey = `uploads/${Date.now()}-${file.name}`;
+    // Create a unique filename with no spaces
+    const timestamp = Date.now();
+    const cleanFileName = file.name
+      .replace(/[^a-zA-Z0-9.]/g, "_")
+      .toLowerCase();
+    const fileKey = `uploads/${timestamp}-${cleanFileName}`;
 
     try {
       console.log("Starting file upload to S3...", {
