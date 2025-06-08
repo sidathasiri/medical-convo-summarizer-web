@@ -1,4 +1,4 @@
-import { styles } from "../HomePage.styles";
+import React from "react";
 import {
   FaMicrophone,
   FaStop,
@@ -6,9 +6,11 @@ import {
   FaMagic,
   FaClock,
 } from "react-icons/fa";
+import { styles } from "../HomePage.styles";
 
 interface RecordingSectionProps {
   isRecording: boolean;
+  isUploading: boolean;
   duration: string;
   transcription: string;
   onRecordingToggle: () => void;
@@ -18,6 +20,7 @@ interface RecordingSectionProps {
 
 export const RecordingSection = ({
   isRecording,
+  isUploading,
   duration,
   transcription,
   onRecordingToggle,
@@ -52,6 +55,7 @@ export const RecordingSection = ({
             alignItems: "center",
             gap: "0.5rem",
           }}
+          disabled={isUploading}
         >
           {isRecording ? (
             <>

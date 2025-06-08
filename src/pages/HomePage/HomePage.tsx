@@ -9,6 +9,8 @@ import { RecordingSection } from "./components/RecordingSection";
 import { InfoSection } from "./components/InfoSection";
 import { SummaryDisplay } from "./components/SummaryDisplay";
 import { Loader } from "../../components/Loader/Loader";
+import { useFileUpload } from "../../hooks/useFileUpload";
+import { FileUploadSection } from "./components/FileUploadSection";
 
 interface HomePageProps {
   user: User;
@@ -18,11 +20,10 @@ interface HomePageProps {
 export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   const { transcription, isRecording, startTranscription, clearTranscription } =
     useTranscription(user.id_token);
+  const { uploadFile, isUploading } = useFileUpload(user.id_token);
   const [duration, setDuration] = useState("00:00");
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [generatedSummary, setGeneratedSummary] = useState<string | null>(null);
-  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
-  const [isInitializingRecording, setIsInitializingRecording] = useState(false);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -59,16 +60,7 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   }, [isRecording, sessionStartTime]);
 
   const handleRecordingToggle = async () => {
-    if (!isRecording) {
-      setIsInitializingRecording(true);
-      try {
-        await startTranscription();
-      } finally {
-        setIsInitializingRecording(false);
-      }
-    } else {
-      await startTranscription();
-    }
+    await startTranscription();
   };
 
   const handleClearTranscription = () => {
@@ -79,7 +71,6 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   };
 
   const handleGenerateSummary = async () => {
-    setIsGeneratingSummary(true);
     try {
       setGeneratedSummary("Generating summary...");
 
@@ -123,8 +114,21 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
     } catch (error) {
       console.error("Error generating summary:", error);
       setGeneratedSummary("Failed to generate summary. Please try again.");
-    } finally {
-      setIsGeneratingSummary(false);
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    try {
+      const fileKey = await uploadFile(file);
+      if (fileKey) {
+        console.log("File uploaded successfully:", fileKey);
+        setGeneratedSummary(
+          `File "${file.name}" uploaded successfully. Transcription will be implemented soon.`
+        );
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setGeneratedSummary("Failed to upload file. Please try again.");
     }
   };
 
@@ -135,14 +139,21 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
         <WelcomeSection
           name={user.profile.given_name || user.profile.email || "User"}
         />
-        <RecordingSection
-          isRecording={isRecording}
-          duration={duration}
-          transcription={transcription}
-          onRecordingToggle={handleRecordingToggle}
-          onClearTranscription={handleClearTranscription}
-          onGenerateSummary={handleGenerateSummary}
-        />
+        <div style={styles.sectionsGrid}>
+          <RecordingSection
+            isRecording={isRecording}
+            isUploading={isUploading}
+            duration={duration}
+            transcription={transcription}
+            onRecordingToggle={handleRecordingToggle}
+            onClearTranscription={handleClearTranscription}
+            onGenerateSummary={handleGenerateSummary}
+          />
+          <FileUploadSection
+            isUploading={isUploading}
+            onFileUpload={handleFileUpload}
+          />
+        </div>
         {generatedSummary && <SummaryDisplay summary={generatedSummary} />}
         <InfoSection />
       </main>

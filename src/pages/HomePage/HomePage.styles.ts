@@ -144,4 +144,12 @@ export const styles = {
     color: "#4A5568",
     fontSize: "0.875rem",
   },
+  sectionsGrid: {
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: "2rem",
+    marginBottom: "2rem",
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
 };

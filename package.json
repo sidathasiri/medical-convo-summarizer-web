@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-cognito-identity": "^3.826.0",
+    "@aws-sdk/client-s3": "^3.826.0",
     "@aws-sdk/client-transcribe-streaming": "^3.826.0",
     "@aws-sdk/credential-providers": "^3.826.0",
     "@testing-library/dom": "^10.4.0",
