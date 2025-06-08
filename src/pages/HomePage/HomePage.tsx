@@ -8,6 +8,7 @@ import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
 import { InfoSection } from "./components/InfoSection";
 import { SummaryDisplay } from "./components/SummaryDisplay";
+import { Loader } from "../../components/Loader/Loader";
 
 interface HomePageProps {
   user: User;
@@ -20,6 +21,8 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   const [duration, setDuration] = useState("00:00");
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [generatedSummary, setGeneratedSummary] = useState<string | null>(null);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [isInitializingRecording, setIsInitializingRecording] = useState(false);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -56,17 +59,27 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   }, [isRecording, sessionStartTime]);
 
   const handleRecordingToggle = async () => {
-    await startTranscription();
+    if (!isRecording) {
+      setIsInitializingRecording(true);
+      try {
+        await startTranscription();
+      } finally {
+        setIsInitializingRecording(false);
+      }
+    } else {
+      await startTranscription();
+    }
   };
 
   const handleClearTranscription = () => {
-    clearTranscription(); // This will also stop the recording
+    clearTranscription();
     setGeneratedSummary(null);
     setSessionStartTime(null);
     setDuration("00:00");
   };
 
   const handleGenerateSummary = async () => {
+    setIsGeneratingSummary(true);
     try {
       setGeneratedSummary("Generating summary...");
 
@@ -86,12 +99,12 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
       }
 
       const data = await response.json();
-      console.log("response:", data);
-
       setGeneratedSummary(data.transcription);
     } catch (error) {
       console.error("Error generating summary:", error);
       setGeneratedSummary("Failed to generate summary. Please try again.");
+    } finally {
+      setIsGeneratingSummary(false);
     }
   };
 

@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { styles } from "../HomePage.styles";
 import { FaFileAlt } from "react-icons/fa";
+import { Loader } from "../../../components/Loader/Loader";
 
 interface SummaryDisplayProps {
   summary: string;
@@ -23,7 +24,11 @@ export const SummaryDisplay = ({ summary }: SummaryDisplayProps) => {
       </h3>
       <div style={{ ...styles.transcriptionContent, padding: "2rem" }}>
         <div className="markdown-content">
-          <ReactMarkdown rehypePlugins={[remarkGfm]}>{summary}</ReactMarkdown>
+          {summary === "Generating summary..." ? (
+            <Loader size="medium" message="Generating your summary..." />
+          ) : (
+            <ReactMarkdown rehypePlugins={[remarkGfm]}>{summary}</ReactMarkdown>
+          )}
         </div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import {
 } from "./configs";
 import { HomePage } from "./pages/HomePage/HomePage";
 import LandingPage from "./pages/LandingPage/LandingPage";
+import { Loader } from "./components/Loader/Loader";
 
 function App() {
   const auth = useAuth();
@@ -19,11 +20,42 @@ function App() {
   };
 
   if (auth.isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "linear-gradient(to bottom, #ffffff, #f7fafc)",
+        }}
+      >
+        <Loader size="large" message="Loading MediScribe..." />
+      </div>
+    );
   }
 
   if (auth.error) {
-    return <div>Encountering error... {auth.error.message}</div>;
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#E53E3E",
+          background: "linear-gradient(to bottom, #ffffff, #f7fafc)",
+        }}
+      >
+        <div style={{ marginBottom: "1rem" }}>
+          An error occurred while loading MediScribe
+        </div>
+        <div style={{ color: "#718096", fontSize: "0.875rem" }}>
+          {auth.error.message}
+        </div>
+      </div>
+    );
   }
 
   if (auth.isAuthenticated && auth.user) {
