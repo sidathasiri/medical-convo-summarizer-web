@@ -30,7 +30,12 @@ export const RecordingSection = ({
   return (
     <section style={{...styles.recordingSection, height: "60px"}}>
       <div style={styles.recordingHeader}>
-        <h2 style={styles.recordingTitle}>Recording Session</h2>
+        <h2 style={styles.recordingTitle}>
+          <span style={{ marginRight: 8, color: '#38A169', verticalAlign: 'middle' }}>
+            <FaMicrophone />
+          </span>
+          Live Recording
+        </h2>
         <div style={styles.recordingStatus}>
           <div style={styles.statusIndicator(isRecording)} />
           <span>{isRecording ? "Recording" : "Ready"}</span>

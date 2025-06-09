@@ -1,4 +1,5 @@
 import React from "react";
+import { FaFileAlt } from "react-icons/fa";
 import { styles } from "../HomePage.styles";
 
 interface TranscriptionDisplayProps {
@@ -15,7 +16,18 @@ export const TranscriptionDisplay = ({
         marginBottom: "2rem",
       }}
     >
-      <h3 style={styles.recordingTitle}>Transcription</h3>
+      <h2 style={styles.recordingTitle}>
+        <span
+          style={{
+            marginRight: 8,
+            color: "#805AD5",
+            verticalAlign: "middle",
+          }}
+        >
+          <FaFileAlt />
+        </span>
+        Transcription
+      </h2>
       <div style={styles.transcriptionContent}>
         <p style={styles.transcriptionText}>{transcription}</p>
       </div>

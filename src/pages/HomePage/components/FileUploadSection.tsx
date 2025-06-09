@@ -113,7 +113,12 @@ export const FileUploadSection = ({
 
   return (
     <section style={{...styles.recordingSection, height: "100px"}}>
-      <h2 style={styles.recordingTitle}>Upload Audio File</h2>
+      <h2 style={styles.recordingTitle}>
+        <span style={{ marginRight: 8, color: '#3182ce', verticalAlign: 'middle' }}>
+          <FaUpload />
+        </span>
+        Upload Session Recording
+      </h2>
       <p style={{ marginBottom: "1rem", color: "#4A5568" }}>
         Upload a pre-recorded audio file of your medical consultation
       </p>

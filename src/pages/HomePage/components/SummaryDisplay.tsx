@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { styles } from "../HomePage.styles";
-import { FaFileAlt } from "react-icons/fa";
+import { FaFileAlt, FaMagic } from "react-icons/fa";
 import { Loader } from "../../../components/Loader/Loader";
 
 interface SummaryDisplayProps {
@@ -19,7 +19,7 @@ export const SummaryDisplay = ({ summary }: SummaryDisplayProps) => {
           gap: "0.5rem",
         }}
       >
-        <FaFileAlt style={{ verticalAlign: "middle" }} />
+        <FaMagic style={{ marginRight: 8, color: "#D69E2E", verticalAlign: "middle" }} />
         <span>Generated Summary</span>
       </h3>
       <div style={{ ...styles.transcriptionContent, padding: "2rem" }}>
