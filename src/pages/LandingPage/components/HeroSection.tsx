@@ -9,6 +9,7 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
   return (
     <section style={styles.hero}>
       <div style={styles.heroContent}>
+        <img src="/main-logo.png" style={{width: '30%'}}/>
         <h1 style={styles.title}>
           Never Miss Important Medical Instructions Again
         </h1>
