@@ -96,14 +96,14 @@ export const FileUploadSection = ({
     }
     if (isUploading) {
       return (
-        <div style={{ color: "#2B6CB0", marginTop: "1rem" }}>
+        <div style={{ color: "#2B6CB0", marginTop: "0px" }}>
           Uploading file...
         </div>
       );
     }
     if (isTranscribing) {
       return (
-        <div style={{ color: "#2B6CB0", marginTop: "1rem" }}>
+        <div style={{ color: "#2B6CB0", marginTop: "0px" }}>
           Transcribing audio... This may take a few minutes.
         </div>
       );
@@ -112,13 +112,13 @@ export const FileUploadSection = ({
   };
 
   return (
-    <section style={styles.recordingSection}>
+    <section style={{...styles.recordingSection, height: "100px"}}>
       <h2 style={styles.recordingTitle}>Upload Audio File</h2>
       <p style={{ marginBottom: "1rem", color: "#4A5568" }}>
         Upload a pre-recorded audio file of your medical consultation
       </p>
 
-      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1px" }}>
         <input
           type="file"
           ref={fileInputRef}
@@ -136,6 +136,7 @@ export const FileUploadSection = ({
             alignItems: "center",
             gap: "0.5rem",
             opacity: isUploading || isTranscribing ? 0.7 : 1,
+            marginBottom: "0px"
           }}
           disabled={isUploading || isTranscribing}
         >
@@ -151,14 +152,6 @@ export const FileUploadSection = ({
       </div>
 
       {getStatusMessage()}
-
-      <div style={styles.transcriptionContent}>
-        <ul style={{ margin: 0, paddingLeft: "1.5rem" }}>
-          <li>Supported formats: MP3, WAV, M4A</li>
-          <li>Maximum file size: 100MB</li>
-          <li>For best results, ensure clear audio quality</li>
-        </ul>
-      </div>
     </section>
   );
 };

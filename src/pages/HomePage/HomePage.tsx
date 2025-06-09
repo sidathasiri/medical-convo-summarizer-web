@@ -8,6 +8,7 @@ import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
 import { InfoSection } from "./components/InfoSection";
 import { SummaryDisplay } from "./components/SummaryDisplay";
+import { TranscriptionDisplay } from "./components/TranscriptionDisplay";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { FileUploadSection } from "./components/FileUploadSection";
 
@@ -27,7 +28,7 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   const { uploadFile, isUploading } = useFileUpload(user.id_token);
   const [duration, setDuration] = useState("00:00");
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
-  const [generatedSummary, setGeneratedSummary] = useState<string | null>(null);
+  const [generatedSummary, setGeneratedSummary] = useState<string | null>();
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -132,24 +133,6 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
     [setTranscription, generateSummary]
   );
 
-  const handleFileUpload = async (file: File): Promise<string> => {
-    try {
-      const fileKey = await uploadFile(file);
-      if (!fileKey) {
-        throw new Error("No file key returned from upload");
-      }
-      console.log("File uploaded successfully:", fileKey);
-      setGeneratedSummary(
-        `File "${file.name}" uploaded successfully. Transcription will be implemented soon.`
-      );
-      return fileKey;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setGeneratedSummary("Failed to upload file. Please try again.");
-      throw error;
-    }
-  };
-
   return (
     <div style={styles.container}>
       <Header email={user.profile.email || "User"} onSignOut={onSignOut} />
@@ -160,9 +143,9 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
         <div style={styles.sectionsGrid}>
           <RecordingSection
             isRecording={isRecording}
+            transcription={transcription}
             isUploading={isUploading}
             duration={duration}
-            transcription={transcription}
             onRecordingToggle={handleRecordingToggle}
             onClearTranscription={handleClearTranscription}
             onGenerateSummary={() => generateSummary(transcription)}
@@ -173,7 +156,10 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
             onTranscriptionUpdate={handleTranscriptionUpdate}
           />
         </div>
-        {generatedSummary && <SummaryDisplay summary={generatedSummary} />}
+        <div style={styles.sectionsGrid}>
+          <TranscriptionDisplay transcription={transcription ?? ""} />
+          <SummaryDisplay summary={generatedSummary ?? ""} />
+        </div>
         <InfoSection />
       </main>
     </div>

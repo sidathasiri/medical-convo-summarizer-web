@@ -50,6 +50,10 @@ export const styles = {
     padding: "2rem",
     marginBottom: "2rem",
     boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    flex: 1,
+    minHeight: "160px",
+    display: "flex",
+    flexDirection: "column" as const,
   },
   recordingHeader: {
     display: "flex",
@@ -80,6 +84,7 @@ export const styles = {
     marginTop: "1rem",
     maxHeight: "400px",
     overflowY: "auto" as const,
+    minHeight: "180px",
   },
   transcriptionText: {
     whiteSpace: "pre-wrap" as const,
@@ -101,6 +106,8 @@ export const styles = {
     "&:hover": {
       backgroundColor: "#5A67D8",
     },
+    opacity: 1,
+    transition: "opacity 0.2s",
   },
   secondaryButton: {
     backgroundColor: "#E2E8F0",
@@ -115,6 +122,13 @@ export const styles = {
     "&:hover": {
       backgroundColor: "#C53030",
     },
+    opacity: 1,
+    transition: "opacity 0.2s",
+  },
+  disabledButton: {
+    opacity: 0.5,
+    cursor: "not-allowed",
+    pointerEvents: "none" as const,
   },
   infoSection: {
     backgroundColor: "white",
@@ -146,10 +160,19 @@ export const styles = {
   },
   sectionsGrid: {
     display: "flex",
-    flexDirection: "column" as const,
+    flexDirection: "row" as const,
     gap: "2rem",
     marginBottom: "2rem",
-    maxWidth: "800px",
-    margin: "0 auto",
+    width: "100%",
+    flexWrap: "nowrap" as const,
+    alignItems: "stretch",
+  },
+  sectionColumn: {
+    flex: 1,
+    minWidth: 0,
+    maxWidth: "100%",
+    display: "flex",
+    flexDirection: "column" as const,
+    height: "100%",
   },
 };

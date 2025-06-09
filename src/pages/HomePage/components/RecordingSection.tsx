@@ -22,13 +22,13 @@ export const RecordingSection = ({
   isRecording,
   isUploading,
   duration,
-  transcription,
   onRecordingToggle,
   onClearTranscription,
   onGenerateSummary,
+  transcription
 }: RecordingSectionProps) => {
   return (
-    <section style={styles.recordingSection}>
+    <section style={{...styles.recordingSection, height: "60px"}}>
       <div style={styles.recordingHeader}>
         <h2 style={styles.recordingTitle}>Recording Session</h2>
         <div style={styles.recordingStatus}>
@@ -60,54 +60,51 @@ export const RecordingSection = ({
           {isRecording ? (
             <>
               <FaStop style={{ verticalAlign: "middle" }} />
-              <span>Stop Recording</span>
+              <span>Stop</span>
             </>
           ) : (
             <>
               <FaMicrophone style={{ verticalAlign: "middle" }} />
-              <span>Start Recording</span>
+              <span>Start</span>
             </>
           )}
         </button>
 
-        {transcription && !isRecording && (
+    
           <>
             <button
               onClick={onClearTranscription}
               style={{
                 ...styles.button,
                 ...styles.dangerButton,
+                ...(!!!transcription ? styles.disabledButton : {}),
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
               }}
+              disabled={!transcription}
             >
               <FaTrash style={{ verticalAlign: "middle" }} />
-              <span>Clear & Start Over</span>
+              <span>Start Over</span>
             </button>
             <button
               onClick={onGenerateSummary}
               style={{
                 ...styles.button,
                 ...styles.primaryButton,
+                ...(!!!transcription ? styles.disabledButton : {}),
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
               }}
+              disabled={!transcription}
             >
               <FaMagic style={{ verticalAlign: "middle" }} />
               <span>Generate Summary</span>
             </button>
           </>
-        )}
+        
       </div>
-
-      {transcription && (
-        <div style={styles.transcriptionContent}>
-          <h3 style={styles.recordingTitle}>Live Transcription</h3>
-          <p style={styles.transcriptionText}>{transcription}</p>
-        </div>
-      )}
     </section>
   );
 };
