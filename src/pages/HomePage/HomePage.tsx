@@ -1,14 +1,13 @@
 import { User } from "oidc-client-ts";
 import { useTranscription } from "../../hooks/useTranscription";
 import { styles } from "./HomePage.styles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BACKEND_API_URL, API_KEY } from "../../configs";
 import { Header } from "./components/Header";
 import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
 import { InfoSection } from "./components/InfoSection";
 import { SummaryDisplay } from "./components/SummaryDisplay";
-import { Loader } from "../../components/Loader/Loader";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { FileUploadSection } from "./components/FileUploadSection";
 
@@ -18,8 +17,13 @@ interface HomePageProps {
 }
 
 export const HomePage = ({ user, onSignOut }: HomePageProps) => {
-  const { transcription, isRecording, startTranscription, clearTranscription } =
-    useTranscription(user.id_token);
+  const {
+    transcription,
+    isRecording,
+    startTranscription,
+    clearTranscription,
+    setTranscription,
+  } = useTranscription(user.id_token);
   const { uploadFile, isUploading } = useFileUpload(user.id_token);
   const [duration, setDuration] = useState("00:00");
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
@@ -70,11 +74,12 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
     setDuration("00:00");
   };
 
-  const handleGenerateSummary = async () => {
-    try {
-      setGeneratedSummary("Generating summary...");
+  const generateSummary = useCallback(
+    async (text: string) => {
+      try {
+        setGeneratedSummary("Generating summary...");
 
-      const query = `
+        const query = `
         query GetTranscriptionSummary($transcription: String!) {
           getTranscriptionSummary(transcription: $transcription) {
             success
@@ -84,53 +89,64 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
         }
       `;
 
-      const response = await fetch(`${BACKEND_API_URL}/graphql`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": API_KEY,
-        },
-        body: JSON.stringify({
-          query,
-          variables: {
-            transcription: transcription,
+        const response = await fetch(`${BACKEND_API_URL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": API_KEY,
           },
-        }),
-      });
+          body: JSON.stringify({
+            query,
+            variables: {
+              transcription: text,
+            },
+          }),
+        });
 
-      const { data, errors } = await response.json();
+        const { data, errors } = await response.json();
 
-      if (errors) {
-        throw new Error(errors[0].message || "Failed to generate summary");
+        if (errors) {
+          throw new Error(errors[0].message || "Failed to generate summary");
+        }
+
+        if (!data.getTranscriptionSummary.success) {
+          throw new Error(
+            data.getTranscriptionSummary.error || "Failed to generate summary"
+          );
+        }
+
+        setGeneratedSummary(data.getTranscriptionSummary.summary);
+      } catch (error) {
+        console.error("Error generating summary:", error);
+        setGeneratedSummary("Failed to generate summary. Please try again.");
       }
+    },
+    [setGeneratedSummary]
+  );
 
-      if (!data.getTranscriptionSummary.success) {
-        throw new Error(
-          data.getTranscriptionSummary.error || "Failed to generate summary"
-        );
-      }
+  const handleTranscriptionUpdate = useCallback(
+    (transcribedText: string) => {
+      setTranscription(transcribedText);
+      generateSummary(transcribedText);
+    },
+    [setTranscription, generateSummary]
+  );
 
-      setGeneratedSummary(data.getTranscriptionSummary.summary);
-    } catch (error) {
-      console.error("Error generating summary:", error);
-      setGeneratedSummary("Failed to generate summary. Please try again.");
-    }
-  };
-
-  const handleFileUpload = async (file: File) => {
+  const handleFileUpload = async (file: File): Promise<string> => {
     try {
       const fileKey = await uploadFile(file);
-      if (fileKey) {
-        console.log("File uploaded successfully:", fileKey);
-        setGeneratedSummary(
-          `File "${file.name}" uploaded successfully. Transcription will be implemented soon.`
-        );
-        return fileKey; // Return the fileKey to indicate success
+      if (!fileKey) {
+        throw new Error("No file key returned from upload");
       }
+      console.log("File uploaded successfully:", fileKey);
+      setGeneratedSummary(
+        `File "${file.name}" uploaded successfully. Transcription will be implemented soon.`
+      );
+      return fileKey;
     } catch (error) {
       console.error("Error uploading file:", error);
       setGeneratedSummary("Failed to upload file. Please try again.");
-      throw error; // Re-throw to be caught by the FileUploadSection
+      throw error;
     }
   };
 
@@ -149,11 +165,12 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
             transcription={transcription}
             onRecordingToggle={handleRecordingToggle}
             onClearTranscription={handleClearTranscription}
-            onGenerateSummary={handleGenerateSummary}
+            onGenerateSummary={() => generateSummary(transcription)}
           />
           <FileUploadSection
             isUploading={isUploading}
-            onFileUpload={handleFileUpload}
+            onFileUpload={uploadFile}
+            onTranscriptionUpdate={handleTranscriptionUpdate}
           />
         </div>
         {generatedSummary && <SummaryDisplay summary={generatedSummary} />}

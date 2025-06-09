@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { WebStorageStateStore } from "oidc-client-ts";
+import "./amplify-config"; // Import Amplify configuration
 import {
   COGNITO_CLIENT_ID,
   COGNITO_POOL_ID,

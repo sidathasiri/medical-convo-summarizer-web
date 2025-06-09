@@ -78,5 +78,6 @@ export const useTranscription = (idToken: string | undefined) => {
     isRecording,
     startTranscription,
     clearTranscription,
+    setTranscription,
   };
 };
