@@ -45,7 +45,7 @@ export const RecordingSection = ({
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem", width: "100%" }}>
         <button
           onClick={onRecordingToggle}
           style={{
@@ -54,6 +54,9 @@ export const RecordingSection = ({
             display: "flex",
             alignItems: "center",
             gap: "0.5rem",
+            flex: 1,
+            minWidth: 0,
+            justifyContent: "center",
           }}
           disabled={isUploading}
         >
@@ -69,41 +72,42 @@ export const RecordingSection = ({
             </>
           )}
         </button>
-
-    
-          <>
-            <button
-              onClick={onClearTranscription}
-              style={{
-                ...styles.button,
-                ...styles.dangerButton,
-                ...(!!!transcription ? styles.disabledButton : {}),
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              disabled={!transcription}
-            >
-              <FaTrash style={{ verticalAlign: "middle" }} />
-              <span>Start Over</span>
-            </button>
-            <button
-              onClick={onGenerateSummary}
-              style={{
-                ...styles.button,
-                ...styles.primaryButton,
-                ...(!!!transcription ? styles.disabledButton : {}),
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              disabled={!transcription}
-            >
-              <FaMagic style={{ verticalAlign: "middle" }} />
-              <span>Generate Summary</span>
-            </button>
-          </>
-        
+        <button
+          onClick={onClearTranscription}
+          style={{
+            ...styles.button,
+            ...styles.dangerButton,
+            ...(!!!transcription ? styles.disabledButton : {}),
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            flex: 1,
+            minWidth: 0,
+            justifyContent: "center",
+          }}
+          disabled={!transcription}
+        >
+          <FaTrash style={{ verticalAlign: "middle" }} />
+          <span>Start Over</span>
+        </button>
+        <button
+          onClick={onGenerateSummary}
+          style={{
+            ...styles.button,
+            ...styles.primaryButton,
+            ...(!!!transcription ? styles.disabledButton : {}),
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            flex: 1,
+            minWidth: 0,
+            justifyContent: "center",
+          }}
+          disabled={!transcription}
+        >
+          <FaMagic style={{ verticalAlign: "middle" }} />
+          <span>Generate Summary</span>
+        </button>
       </div>
     </section>
   );
