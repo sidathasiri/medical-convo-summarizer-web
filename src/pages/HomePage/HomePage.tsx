@@ -101,7 +101,7 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
   return (
     <div style={styles.container}>
       <Header email={user.email || "User"} onSignOut={onSignOut} />
-      <main style={styles.mainContent}>
+      <main style={{...styles.mainContent, width: "90%"}}>
         <WelcomeSection
           name={user.username || "User"}
         />
