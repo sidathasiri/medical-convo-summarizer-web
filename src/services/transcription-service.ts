@@ -49,3 +49,41 @@ export function subscribeToTranscription(
       },
     });
 }
+
+export async function fetchTranscriptionSummary(transcription: string): Promise<string> {
+  const query = `
+    query GetTranscriptionSummary($transcription: String!) {
+      getTranscriptionSummary(transcription: $transcription) {
+        success
+        error
+        summary
+      }
+    }
+  `;
+
+  const response = await fetch(`${BACKEND_API_URL}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify({
+      query,
+      variables: { transcription },
+    }),
+  });
+
+  const { data, errors } = await response.json();
+
+  if (errors) {
+    throw new Error(errors[0].message || "Failed to generate summary");
+  }
+
+  if (!data.getTranscriptionSummary.success) {
+    throw new Error(
+      data.getTranscriptionSummary.error || "Failed to generate summary"
+    );
+  }
+
+  return data.getTranscriptionSummary.summary;
+}

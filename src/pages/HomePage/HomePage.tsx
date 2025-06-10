@@ -2,7 +2,6 @@ import { User } from "oidc-client-ts";
 import { useTranscription } from "../../hooks/useTranscription";
 import { styles } from "./HomePage.styles";
 import { useState, useEffect, useCallback } from "react";
-import { BACKEND_API_URL, API_KEY } from "../../configs";
 import { Header } from "./components/Header";
 import { WelcomeSection } from "./components/WelcomeSection";
 import { RecordingSection } from "./components/RecordingSection";
@@ -11,6 +10,7 @@ import { SummaryDisplay } from "./components/SummaryDisplay";
 import { TranscriptionDisplay } from "./components/TranscriptionDisplay";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { FileUploadSection } from "./components/FileUploadSection";
+import { fetchTranscriptionSummary } from "../../services/transcription-service";
 
 interface HomePageProps {
   user: User;
@@ -79,44 +79,8 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
     async (text: string) => {
       try {
         setGeneratedSummary("Generating summary...");
-
-        const query = `
-        query GetTranscriptionSummary($transcription: String!) {
-          getTranscriptionSummary(transcription: $transcription) {
-            success
-            error
-            summary
-          }
-        }
-      `;
-
-        const response = await fetch(`${BACKEND_API_URL}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": API_KEY,
-          },
-          body: JSON.stringify({
-            query,
-            variables: {
-              transcription: text,
-            },
-          }),
-        });
-
-        const { data, errors } = await response.json();
-
-        if (errors) {
-          throw new Error(errors[0].message || "Failed to generate summary");
-        }
-
-        if (!data.getTranscriptionSummary.success) {
-          throw new Error(
-            data.getTranscriptionSummary.error || "Failed to generate summary"
-          );
-        }
-
-        setGeneratedSummary(data.getTranscriptionSummary.summary);
+        const summary = await fetchTranscriptionSummary(text);
+        setGeneratedSummary(summary);
       } catch (error) {
         console.error("Error generating summary:", error);
         setGeneratedSummary("Failed to generate summary. Please try again.");
