@@ -1,17 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { generateClient, GraphQLSubscription } from "aws-amplify/api";
-import "../amplify-config";
-import { API_KEY, BACKEND_API_URL } from "../configs";
-
-type TranscriptionJobStatus = {
-  fileName: String;
-  transcribedText: String;
-  error: String;
-};
-
-type TranscriptionSubscriptionData = {
-  onTranscriptionComplete: TranscriptionJobStatus;
-};
+import { subscribeToTranscription, TranscriptionJobStatus } from "../services/transcription-service";
 
 export const useTranscriptionSubscription = (
   fileName: string | null,
@@ -22,7 +10,7 @@ export const useTranscriptionSubscription = (
     ? fileName.replace(/^uploads\//, "")
     : null;
 
-  const subscribeToTranscription = useCallback(async () => {
+  const subscribeToTranscriptionCallback = useCallback(async () => {
     if (!fileNameWithoutPrefix) return;
 
     // Clean up existing subscription if any
@@ -31,62 +19,33 @@ export const useTranscriptionSubscription = (
       subscriptionRef.current = null;
     }
 
-    const client = generateClient({
-      endpoint: BACKEND_API_URL,
-      authMode: "apiKey",
-      apiKey: API_KEY,
-    });
-
     try {
-      const subscriber = client
-        .graphql<GraphQLSubscription<TranscriptionSubscriptionData>>({
-          query: `subscription OnTranscriptionComplete($fileName: String!) {
-                    onTranscriptionComplete(fileName: $fileName) {
-                        error
-                        fileName
-                        transcribedText
-                    }
-                }`,
-          variables: { fileName: fileNameWithoutPrefix },
-        })
-        .subscribe({
-          next: (result) => {
-            if (result.data?.onTranscriptionComplete) {
-              const transcriptionData = result.data.onTranscriptionComplete;
+      const subscriber = subscribeToTranscription(
+        fileNameWithoutPrefix,
+        (transcriptionData: TranscriptionJobStatus) => {
+          // Only process if it matches our file
+          if (transcriptionData.fileName === fileNameWithoutPrefix) {
+            onStatusUpdate(transcriptionData);
 
-              // Only process if it matches our file
-              if (transcriptionData.fileName === fileNameWithoutPrefix) {
-                onStatusUpdate(transcriptionData);
-
-                // If we have either transcribed text or an error, unsubscribe
-                if (
-                  (transcriptionData.transcribedText &&
-                    transcriptionData.transcribedText.length > 0) ||
-                  (transcriptionData.error &&
-                    transcriptionData.error.length > 0)
-                ) {
-                  console.log("Transcription complete, unsubscribing");
-                  subscriber.unsubscribe();
-                  subscriptionRef.current = null;
-                }
-              } else {
-                console.log(
-                  "Received update for different file:",
-                  transcriptionData.fileName
-                );
-              }
+            // If we have either transcribed text or an error, unsubscribe
+            if (
+              (transcriptionData.transcribedText &&
+                transcriptionData.transcribedText.length > 0) ||
+              (transcriptionData.error &&
+                transcriptionData.error.length > 0)
+            ) {
+              console.log("Transcription complete, unsubscribing");
+              subscriber.unsubscribe();
+              subscriptionRef.current = null;
             }
-          },
-          error: (error) => {
-            console.warn("Subscription error:", error);
-            onStatusUpdate({
-              fileName: fileNameWithoutPrefix as String,
-              transcribedText: "" as String,
-              error: error.message as String,
-            });
-          },
-        });
-
+          } else {
+            console.log(
+              "Received update for different file:",
+              transcriptionData.fileName
+            );
+          }
+        }
+      );
       subscriptionRef.current = subscriber;
 
       return () => {
@@ -110,8 +69,8 @@ export const useTranscriptionSubscription = (
 
   useEffect(() => {
     // Call subscribeToTranscription when fileName changes
-    subscribeToTranscription();
-  }, [subscribeToTranscription]);
+    subscribeToTranscriptionCallback();
+  }, [subscribeToTranscriptionCallback]);
 
   // Return unsubscribe function from the hook
   return () => {

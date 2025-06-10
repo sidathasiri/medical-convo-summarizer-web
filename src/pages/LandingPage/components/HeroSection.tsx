@@ -18,7 +18,7 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
         margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'center'
       }}>
         <img 
           src="/main-logo.png" 
