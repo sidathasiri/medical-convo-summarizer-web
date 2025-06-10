@@ -32,6 +32,7 @@ Resources:
       ClientName: !Sub ${AWS::StackName}-client
       GenerateSecret: false
       ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
         - ALLOW_USER_PASSWORD_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
       PreventUserExistenceErrors: ENABLED
@@ -45,6 +46,7 @@ Resources:
         - email
         - openid
         - profile
+        - aws.cognito.signin.user.admin
       SupportedIdentityProviders:
         - COGNITO
       AllowedOAuthFlowsUserPoolClient: true

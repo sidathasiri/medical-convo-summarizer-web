@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { styles } from "../HomePage.styles";
-import { FaFileAlt, FaMagic } from "react-icons/fa";
+import { FaMagic } from "react-icons/fa";
 import { Loader } from "../../../components/Loader/Loader";
 
 interface SummaryDisplayProps {

@@ -1,25 +1,65 @@
-import { useAuth } from "react-oidc-context";
-import {
-  COGNITO_CLIENT_ID,
-  COGNITO_DOMAIN,
-  COGNITO_LOGOUT_URI,
-} from "./configs";
+import { useEffect, useState } from "react";
+import { signOut, getCurrentUser, signInWithRedirect, fetchUserAttributes, fetchAuthSession } from "aws-amplify/auth";
+import { Hub } from "aws-amplify/utils";
 import { HomePage } from "./pages/HomePage/HomePage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import { Loader } from "./components/Loader/Loader";
 
 function App() {
-  const auth = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [user, setUser] = useState<any>(null);
 
-  const signOutRedirect = () => {
-    auth.removeUser().then(() => {
-      window.location.href = `${COGNITO_DOMAIN}/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(
-        COGNITO_LOGOUT_URI
-      )}`;
+  useEffect(() => {
+    checkUser();
+
+    // Listen for auth events
+    const unsubscribe = Hub.listen("auth", ({ payload }) => {
+      switch (payload.event) {
+        case "signedIn":
+          checkUser();
+          break;
+        case "signedOut":
+          setUser(null);
+          break;
+        case "tokenRefresh":
+          checkUser();
+          break;
+      }
     });
+
+    return () => unsubscribe();
+  }, []);
+
+  async function checkUser() {
+    try {
+      try {
+        const userData = await getCurrentUser();
+        const attributes = await fetchUserAttributes();
+        const session = await fetchAuthSession();
+        setUser({ ...userData, ...attributes, ...session });
+      } catch (attributeError) {
+        console.warn('Could not fetch user attributes:', attributeError);
+        setUser(null);
+      }
+    } catch (err) {
+      console.error('Authentication error:', err);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setUser(null);
+    } catch (err) {
+      console.error("Error signing out:", err);
+    }
   };
 
-  if (auth.isLoading) {
+  if (isLoading) {
     return (
       <div
         style={{
@@ -35,7 +75,7 @@ function App() {
     );
   }
 
-  if (auth.error) {
+  if (error) {
     return (
       <div
         style={{
@@ -52,17 +92,17 @@ function App() {
           An error occurred while loading MediScribe
         </div>
         <div style={{ color: "#718096", fontSize: "0.875rem" }}>
-          {auth.error.message}
+          {error.message}
         </div>
       </div>
     );
   }
 
-  if (auth.isAuthenticated && auth.user) {
-    return <HomePage user={auth.user} onSignOut={signOutRedirect} />;
+  if (user) {
+    return <HomePage user={user} onSignOut={handleSignOut} />;
   }
 
-  return <LandingPage onSignIn={() => auth.signinRedirect()} />;
+  return <LandingPage onSignIn={() => signInWithRedirect()} />;
 }
 
 export default App;

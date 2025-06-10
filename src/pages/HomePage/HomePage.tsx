@@ -1,4 +1,3 @@
-import { User } from "oidc-client-ts";
 import { useTranscription } from "../../hooks/useTranscription";
 import { styles } from "./HomePage.styles";
 import { useState, useEffect, useCallback } from "react";
@@ -13,19 +12,21 @@ import { FileUploadSection } from "./components/FileUploadSection";
 import { fetchTranscriptionSummary } from "../../services/transcription-service";
 
 interface HomePageProps {
-  user: User;
+  user: any;
   onSignOut: () => void;
 }
 
 export const HomePage = ({ user, onSignOut }: HomePageProps) => {
+  const idToken = user.tokens.idToken.toString()
+  
   const {
     transcription,
     isRecording,
     startTranscription,
     clearTranscription,
     setTranscription,
-  } = useTranscription(user.id_token);
-  const { uploadFile, isUploading } = useFileUpload(user.id_token);
+  } = useTranscription(idToken);
+  const { uploadFile, isUploading } = useFileUpload(idToken);
   const [duration, setDuration] = useState("00:00");
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [generatedSummary, setGeneratedSummary] = useState<string | null>();
@@ -99,10 +100,10 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
 
   return (
     <div style={styles.container}>
-      <Header email={user.profile.email || "User"} onSignOut={onSignOut} />
+      <Header email={user.email || "User"} onSignOut={onSignOut} />
       <main style={styles.mainContent}>
         <WelcomeSection
-          name={user.profile.given_name || user.profile.email || "User"}
+          name={user.username || "User"}
         />
         <div style={styles.sectionsGrid}>
           <RecordingSection
