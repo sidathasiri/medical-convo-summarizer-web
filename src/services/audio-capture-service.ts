@@ -46,15 +46,14 @@ export class AudioCaptureService {
           }
         }
       } finally {
+        // Final empty chunk
+        yield { AudioEvent: { AudioChunk: new Uint8Array(0) } };
         this.cleanup();
       }
     } catch (error) {
       console.error("Error in audio capture:", error);
       throw error;
     }
-
-    // Final empty chunk
-    yield { AudioEvent: { AudioChunk: new Uint8Array(0) } };
   }
 
   private cleanup() {

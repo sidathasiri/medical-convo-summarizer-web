@@ -39,11 +39,11 @@ function App() {
         const session = await fetchAuthSession();
         setUser({ ...userData, ...attributes, ...session });
       } catch (attributeError) {
-        console.warn('Could not fetch user attributes:', attributeError);
-        setUser(null);
+        console.warn('Could not fetch user attributes:', attributeError);setUser(null);
       }
     } catch (err) {
       console.error('Authentication error:', err);
+      setError(err instanceof Error ? err : new Error('Authentication failed'));
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -54,8 +54,10 @@ function App() {
     try {
       await signOut();
       setUser(null);
+      setError(null); // Clear any existing errors
     } catch (err) {
       console.error("Error signing out:", err);
+      setError(err instanceof Error ? err : new Error('Failed to sign out'));
     }
   };
 
