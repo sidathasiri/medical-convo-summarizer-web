@@ -1,6 +1,7 @@
 // filepath: /src/services/transcription-subscription-service.ts
 import { generateClient, GraphQLSubscription } from "aws-amplify/api";
-import { API_KEY, BACKEND_API_URL } from "../configs";
+import { getTranscriptionSummary } from "../graphql/queries";
+import { onTranscriptionComplete } from "../graphql/subscriptions";
 
 export type TranscriptionJobStatus = {
   fileName: String;
@@ -16,21 +17,11 @@ export function subscribeToTranscription(
   fileName: string,
   onStatusUpdate: (status: TranscriptionJobStatus) => void
 ) {
-  const client = generateClient({
-    endpoint: BACKEND_API_URL,
-    authMode: "apiKey",
-    apiKey: API_KEY,
-  });
+  const client = generateClient();
 
   return client
     .graphql<GraphQLSubscription<TranscriptionSubscriptionData>>({
-      query: `subscription OnTranscriptionComplete($fileName: String!) {
-        onTranscriptionComplete(fileName: $fileName) {
-          error
-          fileName
-          transcribedText
-        }
-      }`,
+      query: onTranscriptionComplete,
       variables: { fileName },
     })
     .subscribe({
@@ -51,31 +42,19 @@ export function subscribeToTranscription(
 }
 
 export async function fetchTranscriptionSummary(transcription: string): Promise<string> {
-  const query = `
-    query GetTranscriptionSummary($transcription: String!) {
-      getTranscriptionSummary(transcription: $transcription) {
-        success
-        error
-        summary
-      }
-    }
-  `;
+  const client = generateClient();
 
-  const response = await fetch(`${BACKEND_API_URL}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": API_KEY,
-    },
-    body: JSON.stringify({
-      query,
-      variables: { transcription },
-    }),
+  const result = await client.graphql({
+    query: getTranscriptionSummary,
+    variables: { transcription },
   });
 
-  const { data, errors } = await response.json();
+  // For Amplify API v6, result is { data, errors }.
+  // For v5, result is just the data. We'll handle both.
+  const data = (result as any).data ?? result;
+  const errors = (result as any).errors;
 
-  if (errors) {
+  if (errors && errors.length > 0) {
     throw new Error(errors[0].message || "Failed to generate summary");
   }
 
