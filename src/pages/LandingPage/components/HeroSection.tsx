@@ -34,7 +34,7 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
           textAlign: 'center',
           letterSpacing: '-1px',
         }}>
-          Never Miss Important Medical Instructions Again
+          Your Complete Child Health & Development Companion
         </h1>
         <p style={{
           ...styles.subtitle,
@@ -44,9 +44,9 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
           textAlign: 'center',
           lineHeight: 1.5,
         }}>
-          Turn pediatric consultations into clear, actionable summaries. Get
-          organized medical notes, medication details, and follow-up steps — all
-          powered by AI.
+          Record consultations, track developmental milestones, and get AI-powered
+          summaries of your child's health journey. From birth to 5 years, we're here
+          to help you stay informed every step of the way.
         </p>
         <div style={{ display: "flex", justifyContent: "center", width: '100%' }}>
           <button

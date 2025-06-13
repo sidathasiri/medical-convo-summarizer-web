@@ -1,5 +1,5 @@
 import { styles } from "../LandingPage.styles";
-import { FaClipboardList, FaPills, FaCalendarCheck } from "react-icons/fa";
+import { FaClipboardList, FaPills, FaCalendarCheck, FaBaby } from "react-icons/fa";
 
 export const FeaturesSection = () => {
   return (
@@ -10,6 +10,11 @@ export const FeaturesSection = () => {
           icon={<FaClipboardList size={24} />}
           title="Clear Summaries"
           description="Get easy-to-understand summaries of medical consultations, organized by topic and importance."
+        />
+        <FeatureCard
+          icon={<FaBaby size={24} />}
+          title="Development Tracking"
+          description="Access expert information about your baby's development milestones from 1 to 60 months of age."
         />
         <FeatureCard
           icon={<FaPills size={24} />}
