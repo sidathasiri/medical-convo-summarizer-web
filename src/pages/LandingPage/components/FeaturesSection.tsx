@@ -4,7 +4,7 @@ import { FaClipboardList, FaPills, FaCalendarCheck, FaBaby } from "react-icons/f
 export const FeaturesSection = () => {
   return (
     <section style={styles.features}>
-      <h2 style={styles.sectionTitle}>Why Parents Choose MediScribe</h2>
+      <h2 style={styles.sectionTitle}>Why Parents Choose CuddleScribe</h2>
       <div style={styles.featuresGrid}>
         <FeatureCard
           icon={<FaClipboardList size={24} />}

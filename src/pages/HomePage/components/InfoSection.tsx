@@ -35,7 +35,7 @@ export const InfoSection = () => {
           title="Need Help?"
           content={
             <p>
-              Contact support at support@mediscribe.com
+              Contact support at support@CuddleScribe.com
               <br />
               Available Monday-Friday, 9 AM - 5 PM EST
             </p>

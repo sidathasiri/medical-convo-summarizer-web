@@ -72,7 +72,7 @@ function App() {
           background: "linear-gradient(to bottom, #ffffff, #f7fafc)",
         }}
       >
-        <Loader size="large" message="Loading MediScribe..." />
+        <Loader size="large" message="          Loading CuddleScribe..." />
       </div>
     );
   }
@@ -91,7 +91,7 @@ function App() {
         }}
       >
         <div style={{ marginBottom: "1rem" }}>
-          An error occurred while loading MediScribe
+          An error occurred while loading CuddleScribe
         </div>
         <div style={{ color: "#718096", fontSize: "0.875rem" }}>
           {error.message}

@@ -21,9 +21,9 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
         alignItems: 'center'
       }}>
         <img 
-          src="/main-logo.png" 
+          src="/main-logo-no-bg.png" 
           style={{ width: 200, borderRadius: 16, marginBottom: 24, boxShadow: '0 4px 16px rgba(49,130,206,0.10)' }}
-          alt="MediScribe Logo"
+          alt="CuddleScribe Logo"
         />
         <h1 style={{
           ...styles.title,
@@ -69,7 +69,7 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
             onClick={onSignIn}
           >
             <FaRocket />
-            <span>Try MediScribe Free</span>
+            <span>Try CuddleScribe Free</span>
           </button>
         </div>
       </div>
