@@ -1,5 +1,5 @@
 import { styles } from "../LandingPage.styles";
-import { FaMicrophone, FaRobot, FaFileAlt, FaBaby, FaChartLine } from "react-icons/fa";
+import { FaMicrophone, FaRobot, FaFileAlt, FaBaby, FaChartLine, FaBell } from "react-icons/fa";
 
 export const HowItWorksSection = () => {
   return (
@@ -26,12 +26,18 @@ export const HowItWorksSection = () => {
         />
         <Step
           number={4}
+          icon={<FaBell size={24} />}
+          title="Set Reminders"
+          description="Create reminders for medications, follow-ups, and important milestones to stay on track."
+        />
+        <Step
+          number={5}
           icon={<FaBaby size={24} />}
           title="Track Development"
           description="Access expert information about your child's development milestones at any age."
         />
         <Step
-          number={5}
+          number={6}
           icon={<FaChartLine size={24} />}
           title="Monitor Progress"
           description="Keep track of your child's growth and development journey over time."

@@ -44,9 +44,9 @@ export const HeroSection = ({ onSignIn }: HeroSectionProps) => {
           textAlign: 'center',
           lineHeight: 1.5,
         }}>
-          Record consultations, track developmental milestones, and get AI-powered
+          Record consultations, track milestones, set smart reminders, and get AI-powered
           summaries of your child's health journey. From birth to 5 years, we're here
-          to help you stay informed every step of the way.
+          to help you stay organized and informed every step of the way.
         </p>
         <div style={{ display: "flex", justifyContent: "center", width: '100%' }}>
           <button
