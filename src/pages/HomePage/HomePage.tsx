@@ -10,6 +10,7 @@ import { TranscriptionDisplay } from "./components/TranscriptionDisplay";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { FileUploadSection } from "./components/FileUploadSection";
 import { BabyDevelopmentSection } from "./components/BabyDevelopmentSection";
+import { RemindersSection } from "./components/RemindersSection";
 import { fetchTranscriptionSummary } from "../../services/transcription-service";
 
 interface HomePageProps {
@@ -126,8 +127,13 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
           <TranscriptionDisplay transcription={transcription ?? ""} />
           <SummaryDisplay summary={generatedSummary ?? ""} />
         </div>
-        <div style={styles.sectionsGrid}>
+        <div style={{
+          ...styles.sectionsGrid,
+          flexDirection: 'column',
+          gap: '1rem',
+        }}>
           <BabyDevelopmentSection />
+          <RemindersSection />
         </div>
         <InfoSection />
       </main>
