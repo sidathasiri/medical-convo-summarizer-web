@@ -1,12 +1,9 @@
-import { generateClient } from "aws-amplify/api";
-
 export interface Reminder {
   id: string;
   userId: string;
   description: string;
   dateTime: string; // ISO string
   createdAt: string;
-  completed: boolean;
 }
 
 export const listReminders = `
@@ -17,20 +14,18 @@ export const listReminders = `
       description
       dateTime
       createdAt
-      completed
     }
   }
 `;
 
 export const createReminder = `
-  mutation CreateReminder($description: String!, $dateTime: String!, $userId: ID!) {
-    createReminder(description: $description, dateTime: $dateTime, userId: $userId) {
+  mutation CreateReminder($description: String!, $dateTime: String!, $userId: ID!, $email: String!) {
+    createReminder(description: $description, dateTime: $dateTime, userId: $userId, email: $email) {
       id
       userId
       description
       dateTime
       createdAt
-      completed
     }
   }
 `;
@@ -42,14 +37,13 @@ export const deleteReminder = `
 `;
 
 export const updateReminder = `
-  mutation UpdateReminder($id: ID!, $completed: Boolean!) {
-    updateReminder(id: $id, completed: $completed) {
+  mutation UpdateReminder($id: ID!) {
+    updateReminder(id: $id) {
       id
       userId
       description
       dateTime
       createdAt
-      completed
     }
   }
 `;

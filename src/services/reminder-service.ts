@@ -9,10 +9,8 @@ import {
 } from "../graphql/reminders";
 
 export class ReminderService {
-  static async listReminders(): Promise<Reminder[]> {
+  static async listReminders(userId: string): Promise<Reminder[]> {
     try {
-      const currentUser = await getCurrentUser(); // Verify authentication
-      const userId = currentUser.userId;
       
       const client = generateClient();
       const result = await client.graphql({
@@ -37,15 +35,16 @@ export class ReminderService {
     }
   }
 
-  static async createReminder(description: string, dateTime: string): Promise<Reminder> {
+  static async createReminder(description: string, dateTime: string, userId: string, email: string): Promise<Reminder> {
     try {
-      const currentUser = await getCurrentUser(); // Verify authentication
-      const userId = currentUser.userId;
-      
       const client = generateClient();
+      if (!email) {
+        throw new Error("User email not found");
+      }
+
       const result = await client.graphql({
         query: createReminderMutation,
-        variables: { description, dateTime, userId },
+        variables: { description, dateTime, userId, email },
         authMode: "userPool",
       });
 
@@ -65,10 +64,8 @@ export class ReminderService {
     }
   }
 
-  static async deleteReminder(id: string): Promise<boolean> {
+  static async deleteReminder(id: string, userId: string): Promise<boolean> {
     try {
-      const currentUser = await getCurrentUser(); // Verify authentication
-      const userId = currentUser.userId;
       
       const client = generateClient();
       const result = await client.graphql({
@@ -93,14 +90,14 @@ export class ReminderService {
     }
   }
 
-  static async updateReminder(id: string, completed: boolean): Promise<Reminder> {
+  static async updateReminder(id: string): Promise<Reminder> {
     try {
       await getCurrentUser(); // Verify authentication
       
       const client = generateClient();
       const result = await client.graphql({
         query: updateReminderMutation,
-        variables: { id, completed },
+        variables: { id },
         authMode: "userPool",
       });
 

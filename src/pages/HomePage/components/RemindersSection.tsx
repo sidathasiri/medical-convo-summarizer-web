@@ -5,7 +5,7 @@ import { ReminderService } from '../../../services/reminder-service';
 import type { Reminder } from '../../../graphql/reminders';
 import { Loader } from '../../../components/Loader/Loader';
 
-export const RemindersSection = () => {
+export const RemindersSection = ({userId, email}: {userId: string, email: string}) => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +20,7 @@ export const RemindersSection = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const fetchedReminders = await ReminderService.listReminders();
+      const fetchedReminders = await ReminderService.listReminders(userId);
       setReminders(fetchedReminders.sort((a, b) => 
         new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
       ));
@@ -39,7 +39,9 @@ export const RemindersSection = () => {
     }
 
     try {
-      const newReminder = await ReminderService.createReminder(description, dateTime);
+      // Convert to ISO 8601 format
+      const isoDateTime = new Date(dateTime).toISOString();
+      const newReminder = await ReminderService.createReminder(description, isoDateTime, userId, email);
       setReminders(prev => [...prev, newReminder].sort((a, b) => 
         new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
       ));
@@ -53,16 +55,16 @@ export const RemindersSection = () => {
 
   const handleDeleteReminder = async (id: string) => {
     try {
-      await ReminderService.deleteReminder(id);
+      await ReminderService.deleteReminder(id, userId);
       setReminders(prev => prev.filter(reminder => reminder.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete reminder');
     }
   };
 
-  const handleToggleComplete = async (id: string, completed: boolean) => {
+  const handleToggleComplete = async (id: string) => {
     try {
-      const updatedReminder = await ReminderService.updateReminder(id, completed);
+      const updatedReminder = await ReminderService.updateReminder(id);
       setReminders(prev => prev.map(reminder => 
         reminder.id === id ? updatedReminder : reminder
       ));
@@ -159,16 +161,14 @@ export const RemindersSection = () => {
                   backgroundColor: 'white',
                   borderRadius: '0.5rem',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                  opacity: reminder.completed ? 0.7 : 1,
                 }}
               >
                 <button
-                  onClick={() => handleToggleComplete(reminder.id, !reminder.completed)}
+                  onClick={() => handleToggleComplete(reminder.id)}
                   style={{
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: reminder.completed ? '#48BB78' : '#CBD5E0',
                     padding: '0.5rem',
                   }}
                 >
@@ -176,10 +176,6 @@ export const RemindersSection = () => {
                 </button>
                 <div style={{ flex: 1 }}>
                   <div
-                    style={{
-                      textDecoration: reminder.completed ? 'line-through' : 'none',
-                      color: reminder.completed ? '#718096' : '#2D3748',
-                    }}
                   >
                     {reminder.description}
                   </div>

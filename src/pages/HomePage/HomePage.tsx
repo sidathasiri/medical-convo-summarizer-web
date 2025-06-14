@@ -133,7 +133,7 @@ export const HomePage = ({ user, onSignOut }: HomePageProps) => {
           gap: '1rem',
         }}>
           <BabyDevelopmentSection />
-          <RemindersSection />
+          <RemindersSection userId={user.username}  email={user.email}/>
         </div>
         <InfoSection />
       </main>
