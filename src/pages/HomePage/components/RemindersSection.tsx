@@ -8,6 +8,7 @@ import { Loader } from '../../../components/Loader/Loader';
 export const RemindersSection = ({userId, email}: {userId: string, email: string}) => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [description, setDescription] = useState('');
   const [dateTime, setDateTime] = useState('');
@@ -39,6 +40,7 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
     }
 
     try {
+      setIsSubmitting(true);
       // Convert to ISO 8601 format
       const isoDateTime = new Date(dateTime).toISOString();
       const newReminder = await ReminderService.createReminder(description, isoDateTime, userId, email);
@@ -50,6 +52,8 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create reminder');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -120,6 +124,7 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
           />
           <button
             type="submit"
+            disabled={isSubmitting}
             style={{
               ...styles.button,
               ...styles.primaryButton,
@@ -127,6 +132,10 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
               alignItems: 'center',
               gap: '0.5rem',
               padding: '0.85rem 1.5rem',
+              opacity: isSubmitting ? 0.7 : 1,
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              minWidth: '120px',
+              justifyContent: 'center'
             }}
           >
             <FaPlus />
@@ -142,8 +151,8 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
       )}
 
       <div style={styles.transcriptionContent}>
-        {isLoading ? (
-          <Loader size="medium" message="Loading reminders..." />
+        {isLoading || isSubmitting ? (
+          <Loader size="medium" message={isSubmitting ? "Adding reminder..." : "Loading reminders..."} />
         ) : reminders.length === 0 ? (
           <div style={{ textAlign: 'center', color: '#718096' }}>
             No reminders yet. Add one above!
