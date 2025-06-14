@@ -50,6 +50,7 @@ export const styles = {
   },
   button: {
     padding: "1rem 2rem",
+    height: "3rem",
     fontSize: "1.125rem",
     fontWeight: "bold",
     backgroundColor: "#48BB78",
@@ -57,7 +58,10 @@ export const styles = {
     border: "none",
     borderRadius: "0.5rem",
     cursor: "pointer",
-    transition: "transform 0.2s, background-color 0.2s",
+    transition: "all 0.2s",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
     "&:hover": {
       backgroundColor: "#38A169",
       transform: "translateY(-2px)",

@@ -1,5 +1,5 @@
 import { styles } from "../LandingPage.styles";
-import { FaClipboardList, FaPills, FaCalendarCheck, FaBaby } from "react-icons/fa";
+import { FaClipboardList, FaCalendarCheck, FaBaby, FaBell } from "react-icons/fa";
 
 export const FeaturesSection = () => {
   return (
@@ -17,9 +17,9 @@ export const FeaturesSection = () => {
           description="Access expert information about your baby's development milestones from 1 to 60 months of age."
         />
         <FeatureCard
-          icon={<FaPills size={24} />}
-          title="Medication Details"
-          description="Never forget medication instructions. Get dosage, timing, and important warnings clearly laid out."
+          icon={<FaBell size={24} />}
+          title="Smart Reminders"
+          description="Set and manage reminders for medications, follow-ups, and important milestones. Never miss a critical date."
         />
         <FeatureCard
           icon={<FaCalendarCheck size={24} />}

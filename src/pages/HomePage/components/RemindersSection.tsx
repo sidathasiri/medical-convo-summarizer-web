@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaBell, FaPlus, FaTrash, FaCheck } from 'react-icons/fa';
+import { FaBell, FaPlus, FaTrash } from 'react-icons/fa';
 import { styles } from '../HomePage.styles';
 import { ReminderService } from '../../../services/reminder-service';
 import type { Reminder } from '../../../graphql/reminders';

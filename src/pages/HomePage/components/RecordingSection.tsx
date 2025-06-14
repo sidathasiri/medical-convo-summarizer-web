@@ -93,7 +93,7 @@ export const RecordingSection = ({
           disabled={!transcription}
         >
           <FaTrash style={{ verticalAlign: "middle" }} />
-          <span>Start Over</span>
+          <span>Cancel</span>
         </button>
         <button
           onClick={onGenerateSummary}
@@ -111,7 +111,7 @@ export const RecordingSection = ({
           disabled={!transcription}
         >
           <FaMagic style={{ verticalAlign: "middle" }} />
-          <span>Generate Summary</span>
+          <span>Generate</span>
         </button>
       </div>
     </section>
