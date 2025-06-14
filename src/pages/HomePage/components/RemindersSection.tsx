@@ -66,17 +66,6 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
     }
   };
 
-  const handleToggleComplete = async (id: string) => {
-    try {
-      const updatedReminder = await ReminderService.updateReminder(id);
-      setReminders(prev => prev.map(reminder => 
-        reminder.id === id ? updatedReminder : reminder
-      ));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update reminder');
-    }
-  };
-
   const formatDateTime = (dateTime: string) => {
     return new Date(dateTime).toLocaleString('en-US', {
       dateStyle: 'medium',
@@ -172,17 +161,6 @@ export const RemindersSection = ({userId, email}: {userId: string, email: string
                   boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 }}
               >
-                <button
-                  onClick={() => handleToggleComplete(reminder.id)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '0.5rem',
-                  }}
-                >
-                  <FaCheck />
-                </button>
                 <div style={{ flex: 1 }}>
                   <div
                   >
