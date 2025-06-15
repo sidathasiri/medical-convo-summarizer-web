@@ -1,46 +1,145 @@
-# Getting Started with Create React App
+# CuddleScribe - Your Child Health & Development Companion
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CuddleScribe is a comprehensive web application designed to help parents track and manage their children's health and development journey. The application provides features for recording medical consultations, tracking developmental milestones, setting reminders, and generating AI-powered summaries of health conversations.
 
-## Available Scripts
+![CuddleScribe Logo](public/main-logo.png)
 
-In the project directory, you can run:
+## 🌟 Features
 
-### `npm start`
+- **Medical Consultation Recording & Transcription**
+  - Record doctor visits in real-time
+  - Upload pre-recorded consultations
+  - Automatic transcription using AWS Transcribe
+  - AI-powered summaries of medical conversations
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Development Milestone Tracking**
+  - Access expert information about child development from 1 to 60 months
+  - Track and monitor your child's growth progress
+  - Receive age-appropriate developmental guidelines
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- **Smart Reminders**
+  - Set reminders for medications and follow-ups
+  - Track important milestone dates
+  - Never miss critical appointments or medications
 
-### `npm test`
+## 🚀 Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- Node.js (v16 or higher)
+- AWS Account with appropriate permissions
+- AWS CLI configured with your credentials
+- SAM CLI
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repository
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Install dependencies:
+```bash
+npm install
+```
 
-### `npm run eject`
+3. Setup the configurations in `src/configs.ts`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+4. Start the development server:
+```bash
+npm start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Production Deployment
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Build the application:
+```bash
+npm run build
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2. Deploy the infrastructure:
+```bash
+sam build
+sam deploy
+```
 
-## Learn More
+3. Upload the build static files to S3 bucket and invalidate the CLoudfront cache
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🏗️ Architecture
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The application uses a modern, scalable architecture:
+
+![CuddleScribe Logo](architecture.png)
+
+- **Frontend**
+  - React with TypeScript
+  - Material-UI components
+  - AWS Amplify for authentication
+  - Real-time websocket connections for transcription
+
+- **Backend Services**
+  - AWS Cognito for authentication and user management
+  - AWS S3 for static website hosting and file storage
+  - AWS CloudFront for content delivery
+  - AWS Transcribe for real-time speech-to-text
+  - AWS AppSync for GraphQL API
+
+## 📁 Project Structure
+
+```
+src/
+├── components/         # Reusable UI components
+├── pages/              # Page components and layouts
+│   ├── HomePage/       # Main application interface
+│   └── LandingPage/    # Public landing page
+├── services/           # AWS service integrations
+├── hooks/              # Custom React hooks
+├── graphql/            # GraphQL queries and mutations
+└── configs.ts         # AWS configuration
+```
+
+## 🛠️ Development
+
+### Available Scripts
+
+- `npm start`: Start development server
+  - Runs the app in development mode
+  - Open [http://localhost:3000](http://localhost:3000) to view it
+  - Page reloads on edits
+  - Shows lint errors in console
+- `npm run build`: Build for production
+  - Builds the app for production to `build` folder
+  - Optimizes build for best performance
+  - Minifies and hashes filenames
+
+### AWS Infrastructure
+
+The application is deployed using AWS SAM (Serverless Application Model):
+
+- `template.yaml` defines the infrastructure:
+  - S3 bucket for static website hosting
+  - CloudFront distribution for content delivery
+  - Cognito User Pool for authentication
+  - IAM roles and policies
+  - CloudFront Functions for SPA routing
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+Please make sure to:
+- Follow the existing code style
+- Add tests for new features
+- Update documentation as needed
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+For support:
+- Open an issue in the GitHub repository
+- Check existing issues for answers
+- Contact the maintainers
