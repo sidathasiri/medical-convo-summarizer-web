@@ -28,7 +28,7 @@ CuddleScribe is a comprehensive web application designed to help parents track a
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - AWS Account with appropriate permissions
 - AWS CLI configured with your credentials
 - SAM CLI
@@ -42,7 +42,24 @@ CuddleScribe is a comprehensive web application designed to help parents track a
 npm install
 ```
 
-3. Setup the configurations in `src/configs.ts`
+3. Setup your AWS Credentials
+
+4. Deploy the infrastructure:
+```bash
+sam build
+sam deploy
+```
+
+4. Update the configurations in `src/configs.ts`
+   - COGNITO_POOL_ID: The Cognito Pool ID created after SAM deployment
+   - COGNITO_IDENTITY_POOL_ID: The Cognito Identity Pool ID crated after SAM deploy
+   - REGION: AWS region
+   - COGNITO_CLIENT_ID: Cognito Pool App Client ID
+   - COGNITO_DOMAIN: Cognito Domain
+   - COGNITO_REDIRECT_URI: Cognito login URL. For localhost use `http://localhost:3000`
+   - COGNITO_LOGOUT_URI = Cognito logout URL. For localhost, use `http://localhost:3000`
+   - BACKEND_API_URL: Appsync Backend URL. This can be obtained by after deploying the backend project (`https://github.com/sidathasiri/medical-convo-summarizer`)
+
 
 4. Start the development server:
 ```bash
@@ -51,18 +68,10 @@ npm start
 
 ### Production Deployment
 
-1. Build the application:
-```bash
-npm run build
-```
-
-2. Deploy the infrastructure:
-```bash
-sam build
-sam deploy
-```
-
-3. Upload the build static files to S3 bucket and invalidate the CLoudfront cache
+1. Follow the Installation instructions
+2. Run `npm run deploy` to deploy the web application to CloudFront
+3. Update the login/logout URLs with the CloudFront generated URL in `src/configs.ts`
+4. Re-run the `npm run deploy` command
 
 ## 🏗️ Architecture
 
@@ -72,7 +81,6 @@ The application uses a modern, scalable architecture:
 
 - **Frontend**
   - React with TypeScript
-  - Material-UI components
   - AWS Amplify for authentication
   - Real-time websocket connections for transcription
 
