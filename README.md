@@ -5,6 +5,7 @@ CuddleScribe is a comprehensive web application designed to help parents track a
 ![CuddleScribe Logo](public/main-logo.png)
 
 - **Live Demo**: https://d3j9l9t024859x.cloudfront.net/
+- **Backend repository**: https://github.com/sidathasiri/medical-convo-summarizer
 
 ## 🌟 Features
 
